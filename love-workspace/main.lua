@@ -12,9 +12,6 @@ function love.load()
     square.pathfinder:addTarget(200, 100)
     square.pathfinder:addTarget(300, 300)
     square.pathfinder:addTarget(100, 300)
-
-
-
 end
 
 function love.update(dt)
