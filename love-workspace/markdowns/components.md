@@ -31,3 +31,51 @@ function love.draw()
     square:draw()
 end
 ```
+
+# Examples with components
+
+## Linked List & Square
+
+```lua
+local LinkedList = require("linked_list")
+local Square = require("square")
+
+local squareList
+
+function love.load()
+    squareList = LinkedList:new()
+
+    -- Create some Squares and add them to the list
+    for i = 1, 5 do
+        local sq = Square:new(100 + i * 50, 100)
+        squareList:push(sq)
+    end
+end
+
+function love.update(dt)
+    squareList:forEach(function(square)
+        square:update(dt)
+    end)
+end
+
+function love.draw()
+    squareList:forEach(function(square)
+        square:draw()
+    end)
+end
+
+function love.mousepressed(x, y, button)
+    if button == 1 then
+        squareList:forEach(function(square)
+            square.pathfinder:addTarget(x, y)
+        end)
+    end
+end
+```
+
+## Graph & Square
+
+```lua
+
+
+```

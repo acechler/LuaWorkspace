@@ -3,24 +3,58 @@
 -- 2. Type "love ." into the terminal
 
 local Graph = require("graph")
+local Square = require("square")
 
-local g
+local squareGraph
+local squareRefs = {} -- optional: to keep track of squares by ID
 
 function love.load()
-    g = Graph:new(false)  -- Set true for directed graph
+    squareGraph = Graph:new(false) -- false = undirected
 
-    g:addEdge("A", "B")
-    g:addEdge("A", "C")
-    g:addEdge("B", "D")
-    g:addEdge("C", "D")
+    -- Create Squares and add to graph
+    for i = 1, 5 do
+        local sq = Square:new(100 + i * 60, 200)
+        local id = "Square" .. i
+        squareRefs[id] = sq
+        squareGraph:addNode(id)
+    end
+
+    -- Connect squares in a line: Square1 <-> Square2 <-> ... <-> Square5
+    for i = 1, 4 do
+        local from = "Square" .. i
+        local to = "Square" .. (i + 1)
+        squareGraph:addEdge(from, to)
+    end
+end
+
+function love.update(dt)
+    for id, square in pairs(squareRefs) do
+        square:update(dt)
+    end
 end
 
 function love.draw()
-    local y = 20
-    g:forEachNode(function(node)
-        local neighbors = g:getNeighbors(node)
-        local text = node .. " -> " .. table.concat(neighbors, ", ")
-        love.graphics.print(text, 20, y)
-        y = y + 20
+    -- Draw squares
+    for id, square in pairs(squareRefs) do
+        square:draw()
+    end
+
+    -- (Optional) Draw connections
+    love.graphics.setColor(1, 1, 0)
+    squareGraph:forEachEdge(function(from, to)
+        local a = squareRefs[from]
+        local b = squareRefs[to]
+        if a and b then
+            love.graphics.line(a.x, a.y, b.x, b.y)
+        end
     end)
+end
+
+-- Click to assign a new target to all Squares
+function love.mousepressed(x, y, button)
+    if button == 1 then
+        for _, square in pairs(squareRefs) do
+            square.pathfinder:addTarget(x, y)
+        end
+    end
 end
