@@ -39,7 +39,7 @@ function love.draw()
         square:draw()
     end
 
-    -- (Optional) Draw connections
+    -- Draw connections
     love.graphics.setColor(1, 1, 0)
     squareGraph:forEachEdge(function(from, to)
         local a = squareRefs[from]
