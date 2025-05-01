@@ -2,27 +2,25 @@
 -- 1. Make sure terminal has love-workspace folder open
 -- 2. Type "love ." into the terminal
 
-local Square = require("square")
+local Graph = require("graph")
 
-local square
+local g
 
 function love.load()
-    square = Square:new(50, 50) -- use colon syntax for class method
-    square.pathfinder:addTarget(200, 100)
-    square.pathfinder:addTarget(300, 300)
-    square.pathfinder:addTarget(100, 300)
-end
+    g = Graph:new(false)  -- Set true for directed graph
 
-function love.update(dt)
-    square:update(dt)
-
-    -- Click to dynamically add new waypoints
-    if love.mouse.isDown(1) then
-        local mx, my = love.mouse.getPosition()
-        square.pathfinder:addTarget(mx, my)
-    end
+    g:addEdge("A", "B")
+    g:addEdge("A", "C")
+    g:addEdge("B", "D")
+    g:addEdge("C", "D")
 end
 
 function love.draw()
-    square:draw()
+    local y = 20
+    g:forEachNode(function(node)
+        local neighbors = g:getNeighbors(node)
+        local text = node .. " -> " .. table.concat(neighbors, ", ")
+        love.graphics.print(text, 20, y)
+        y = y + 20
+    end)
 end
