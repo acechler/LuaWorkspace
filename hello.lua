@@ -1,2 +1,12 @@
 -- in terminal -> lua hello.lua
-print("Hello, World")
+
+
+-- create
+local colors = { "red", "green", "blue" }
+
+table.insert(colors, "yellow")   
+
+
+for i, c in ipairs(colors) do
+    print(i, c)
+end
